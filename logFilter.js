@@ -12,12 +12,14 @@ function filterLogsByEnv(logs, env) {
 
 function filterLogsOnDate(logs, dateFilter) {
   const filteredLogs = []
-  const parsedDateFilter = new Date(dateFilter)
-
+  let parsedDateFilter = new Date(dateFilter)
+  // Reassign variable without hours, minutes, etc AND IN GMT first
+  parsedDateFilter = new Date(parsedDateFilter.getUTCFullYear(), parsedDateFilter.getUTCMonth(), parsedDateFilter.getUTCDay(),0,0,0,0)
   logs.forEach((log) => {
-    const timestampDate = new Date(log.timestamp)
-
-    if (parsedDateFilter.toDateString() === timestampDate.toDateString()) {
+    let timestampDate = new Date(log.timestamp)
+    // Reassign here too to keep comparisons in a controlled standard
+    timestampDate = new Date(timestampDate.getUTCFullYear(), timestampDate.getUTCMonth(), timestampDate.getUTCDay(),0,0,0,0)
+    if (parsedDateFilter.toString() === timestampDate.toString()) {
       filteredLogs.push(log)
     }
   })
